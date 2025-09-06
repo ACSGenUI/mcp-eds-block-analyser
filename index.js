@@ -81,7 +81,7 @@ const REQUIRED_ARTIFACTS_FRAMEWORK = `
 
 1. **EDS Block Analysis CSV** ('eds-blocks-analysis.csv')
    - Contains the complete component breakdown
-   - Use the template 'eds-blocks-analysis-template' to create the csv file. 
+   - Use the template 'eds-blocks-analysis-template.csv' to create the csv file. 
 
 2. **EDS Blocks Consolidated CSV** ('eds-blocks-consolidated.csv')
    - Contains the consolidated EDS blocks from eds-blocks-analysis.csv.
@@ -103,7 +103,7 @@ const REQUIRED_ARTIFACTS_FRAMEWORK = `
    - Reusability recommendations
    - Technical implementation notes
    - Risk assessment and mitigation strategies
-   - use the template 'analysis-summary-template' to create the summary report.
+   - use the template 'analysis-summary-template.md' to create the summary report.
 
 4. **Evaluation Log** ('evaluation-log.md')
    - **Iteration tracking**: Document each analysis iteration (1-3 max)
@@ -112,7 +112,7 @@ const REQUIRED_ARTIFACTS_FRAMEWORK = `
    - **Final evaluation**: Overall quality score and pass/fail status
    - **Time stamps**: When each iteration was completed
    - **Decision rationale**: Why iterations were needed and what was improved
-   - use the template 'evaluation-log-template' to create the evaluation log.
+   - use the template 'evaluation-log-template.md' to create the evaluation log.
 
 5. **Template Mapping** ('template-mapping.md')
    - **Template Structure**: Document the template structure and component relationships.
