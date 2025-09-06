@@ -4,6 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { z } from "zod";
 
 
 // Create the server
@@ -268,10 +269,10 @@ server.registerTool("security_guardrails_framework",
 server.registerTool("get_template",
   {
     title: "Get Template",
-    description: "Access any template by name. Available templates: eds-blocks-analysis-template, analysis-summary-template, evaluation-log-template, template-mapping-template",
+    description: "Access any template by name. Available templates: eds-blocks-analysis-template, eds-blocks-consolidated-template, analysis-summary-template, evaluation-log-template, template-mapping-template",
+    inputSchema: { templateName: z.string() }
   },
-  async (args) => {
-    const templateName = args;
+  async ({ templateName }) => {
     if (!templateName) {
       return {
         content: [{ type: "text", text: "Error: templateName parameter is required. Available templates: " + TEMPLATE_MAPPING.map(t => t.name).join(', ') }]
@@ -286,11 +287,21 @@ server.registerTool("get_template",
 // Add individual tools for each artifact template
 server.registerTool("eds-blocks-analysis-template",
   {
-    title: "UI Blocks Analysis Template",
-    description: "Access the CSV template for UI blocks analysis",
+    title: "EDS Blocks Analysis Template",
+    description: "Access the CSV template for EDS blocks analysis",
   },
   async () => ({
     content: [{ type: "text", text: getTemplate('eds-blocks-analysis-template') }]
+  })
+);
+
+server.registerTool("eds-blocks-consolidated-template",
+  {
+    title: "EDS Blocks Consolidated Template",
+    description: "Access the consolidated CSV template for EDS blocks analysis",
+  },
+  async () => ({
+    content: [{ type: "text", text: getTemplate('eds-blocks-consolidated-template') }]
   })
 );
 

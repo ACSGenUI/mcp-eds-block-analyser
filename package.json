@@ -29,7 +29,8 @@
   "author": "Adobe ACS GENUI",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.2"
+    "@modelcontextprotocol/sdk": "^1.17.2",
+    "zod": "^3.22.4"
   },
   "engines": {
     "node": ">=20.0.0"
