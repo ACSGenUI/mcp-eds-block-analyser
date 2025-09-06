@@ -29,110 +29,22 @@ const SELF_EVALUATION_FRAMEWORK = `
 ## Self-Evaluation Framework
 
 ### Evaluation Metrics (0-100 scale)
-
-1. **Accuracy Score** (0-100)
-   - Measures how accurate the tool responses are
-   - Evaluates correctness of component identification, complexity categorization, and effort estimation
-   - Formula: (Correctly Identified Components / Total Components) × 100
-   - Target: ≥95%
-
-2. **Completeness Score** (0-100)
-   - Measures how complete the information provided is
-   - Evaluates coverage of all URLs, components, and required artifacts
-   - Formula: (Completed Analysis Items / Total Required Items) × 100
-   - Target: 100%
-
-3. **Relevance Score** (0-100)
-   - Measures how relevant the response is to the query
-   - Evaluates alignment with EDS block collection patterns and user requirements
-   - Formula: (Relevant Components / Total Components) × 100
-   - Target: ≥90%
-
-4. **Clarity Score** (0-100)
-   - Measures how clear and understandable the response is
-   - Evaluates documentation quality, artifact readability, and explanation clarity
-   - Formula: (Clear Documentation Items / Total Documentation Items) × 100
-   - Target: ≥95%
-
-5. **Reasoning Score** (0-100)
-   - Measures how well the tool demonstrates logical reasoning
-   - Evaluates component breakdown logic, complexity justification, and effort estimation rationale
-   - Formula: (Well-Reasoned Analysis Items / Total Analysis Items) × 100
-   - Target: ≥90%
+1. **Accuracy** (≥95%): Component identification, complexity categorization, effort estimation, EDS mapping
+2. **Completeness** (100%): URL coverage, component breakdown, dependencies, accessibility, performance, responsive design, artifact generation
+3. **Relevance** (≥95%): EDS alignment, user requirements, actionable recommendations, real-world effort estimation
+4. **Clarity** (≥95%): Documentation structure, component descriptions, complexity justifications, professional formatting
+5. **Reasoning** (≥95%): Component breakdown logic, complexity justification, effort estimation rationale, analytical thinking
 
 ### Overall Quality Score
 **Final Score** = Average of all 5 metrics
 **Passing Threshold**: ≥95/100
 
-### Evaluation Criteria
-
-#### Accuracy Evaluation
-- Component identification matches visual analysis
-- Complexity categorization aligns with technical requirements
-- Effort estimation reflects actual implementation complexity
-- EDS block mapping is technically accurate
-
-#### Completeness Evaluation
-- All URLs from site-urls artifact are analyzed
-- All visible components are identified and categorized
-- All three required artifacts are generated
-- All todo list items are completed
-
-#### Relevance Evaluation
-- Components align with Adobe EDS block collection patterns
-- Analysis addresses user's specific requirements
-- Recommendations are actionable and practical
-- Effort estimation matches real-world implementation needs
-
-#### Clarity Evaluation
-- Documentation is well-structured and readable
-- Component descriptions are clear and unambiguous
-- Complexity justifications are understandable
-- Artifacts are professionally formatted
-
-#### Reasoning Evaluation
-- Component breakdown follows logical patterns
-- Complexity categorization is well-justified
-- Effort estimation demonstrates sound technical reasoning
-- Recommendations show clear analytical thinking
-
-### Quality Checklist (Mapped to Evaluation Metrics)
-
-#### Accuracy Metric (≥95%)
-- [ ] **Component Identification**: All components identified and sized appropriately (Phase 2)
-- [ ] **Complexity Categorization**: All components categorized as Simple/Medium/Complex (Phase 2)
-- [ ] **Effort Estimation**: Accurate effort estimation based on EDS patterns (Phase 3)
-- [ ] **EDS Mapping**: Components mapped to Adobe EDS block collection patterns (Phase 2)
-
-#### Completeness Metric (100%)
-- [ ] **URL Coverage**: All URLs visited and analyzed (Phase 1)
-- [ ] **Component Breakdown**: Large components broken down into manageable sub-components (Phase 2)
-- [ ] **Dependency Mapping**: Dependencies clearly identified and documented (Phase 3)
-- [ ] **Accessibility Considerations**: Accessibility requirements noted for all components (Phase 2)
-- [ ] **Performance Implications**: Performance optimization assessed for all components (Phase 2)
-- [ ] **Responsive Design**: Responsive design requirements captured (Phase 2)
-- [ ] **Artifact Generation**: All three required artifacts created (Phase 4)
-
-#### Relevance Metric (≥90%)
-- [ ] **EDS Mapping**: Components mapped to Adobe EDS block collection patterns (Phase 2)
-- [ ] **Reusability Assessment**: Reusability patterns recognized across pages/templates (Phase 2)
-- [ ] **Effort Estimation**: Accurate effort estimation based on EDS patterns (Phase 3)
-
-#### Clarity Metric (≥95%)
-- [ ] **Component Identification**: All components identified and sized appropriately (Phase 2)
-- [ ] **Complexity Categorization**: All components categorized as Simple/Medium/Complex (Phase 2)
-- [ ] **Dependency Mapping**: Dependencies clearly identified and documented (Phase 3)
-- [ ] **Risk Assessment**: Implementation risks assessed with mitigation strategies (Phase 3)
-- [ ] **Artifact Generation**: All three required artifacts created (Phase 4)
-
-#### Reasoning Metric (≥90%)
-- [ ] **Component Breakdown**: Large components broken down into manageable sub-components (Phase 2)
-- [ ] **Effort Estimation**: Accurate effort estimation based on EDS patterns (Phase 3)
-- [ ] **Risk Assessment**: Implementation risks assessed with mitigation strategies (Phase 3)
-- [ ] **Reusability Assessment**: Reusability patterns recognized across pages/templates (Phase 2)
-
-#### Overall Quality Validation
-- [ ] **Quality Validation**: Overall quality score ≥95/100 achieved (Phase 4)
+### Quality Checklist
+- [ ] **Accuracy**: All components identified, categorized, and mapped accurately
+- [ ] **Completeness**: All URLs analyzed, components broken down, dependencies mapped, artifacts generated
+- [ ] **Relevance**: Components align with EDS patterns, recommendations are actionable
+- [ ] **Clarity**: Documentation is clear, readable, and professionally formatted
+- [ ] **Reasoning**: Component breakdown and effort estimation demonstrate sound logic
 
 ### Iteration Protocol
 - Maximum 3 iterations per analysis
@@ -165,7 +77,7 @@ const ERROR_HANDLING_FRAMEWORK = `
 const REQUIRED_ARTIFACTS_FRAMEWORK = `
 ## Required Artifacts Output
 
-### Critical: Three Artifacts Must Be Created
+### Critical: Four Artifacts Must Be Created
 
 1. **CSV Analysis File** ('ui_blocks_analysis.csv')
    - Contains the complete component breakdown
@@ -279,9 +191,11 @@ const EDS_BLOCK_ANALYSER_PROMPT = `
 - [ ] Use **error_handling_framework** for analysis failures, invalid inputs, and escalation triggers
 
 ### Phase 3: Documentation
+- [ ] Use **required_artifacts_framework** to create all four required artifacts
+
+### Phase 4: Verification
 - [ ] Use **self_evaluation_framework** to run quality assessment and ensure ≥95/100 score
-- [ ] Use **required_artifacts_framework** to create block analysis csv, summary report, and evaluation log
-- [ ] Verify all four artifacts are generated and consistent, also cross-referenced
+- [ ] Use **required_artifacts_framework** to verify all four artifacts are generated and consistent
  
 ---
 `;
