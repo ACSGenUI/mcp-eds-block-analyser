@@ -271,7 +271,7 @@ server.registerTool("get_template",
     description: "Access any template by name. Available templates: eds-blocks-analysis-template, analysis-summary-template, evaluation-log-template, template-mapping-template",
   },
   async (args) => {
-    const templateName = args.templateName;
+    const templateName = args;
     if (!templateName) {
       return {
         content: [{ type: "text", text: "Error: templateName parameter is required. Available templates: " + TEMPLATE_MAPPING.map(t => t.name).join(', ') }]
