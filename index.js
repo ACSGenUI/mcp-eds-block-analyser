@@ -77,13 +77,20 @@ const ERROR_HANDLING_FRAMEWORK = `
 const REQUIRED_ARTIFACTS_FRAMEWORK = `
 ## Required Artifacts Output
 
-### Critical: Four Artifacts Must Be Created
+### Critical: Five Artifacts Must Be Created
 
-1. **CSV Analysis File** ('ui_blocks_analysis.csv')
+1. **EDS Block Analysis CSV** ('eds-blocks-analysis.csv')
    - Contains the complete component breakdown
-   - Use the template 'ui-blocks-analysis-template' to create the csv file. Wrap the columns in quotes.
+   - Use the template 'eds-blocks-analysis-template' to create the csv file. 
 
-2. **Summary Report** ('analysis_summary.md')
+2. **EDS Blocks Consolidated CSV** ('eds-blocks-consolidated.csv')
+   - Contains the consolidated EDS blocks from eds-blocks-analysis.csv.
+   - Use the template 'eds-blocks-consolidated-template.csv' to create the csv file.
+   - Group by [UI Component Name] from eds-blocks-analysis.csv and also use the [Source block name] from eds-blocks-analysis.csv
+   - Count of the UI components in the group from eds-blocks-analysis.csv
+   - Use 'eds-blocks-consolidated-template.csv' to create the csv file.
+
+3. **Summary Report** ('analysis-summary.md')
    - Executive summary of findings
    - **URL Analysis Section**: Complete list of all URLs analyzed with individual statistics
      - URL count and breakdown by page type/template
@@ -98,7 +105,7 @@ const REQUIRED_ARTIFACTS_FRAMEWORK = `
    - Risk assessment and mitigation strategies
    - use the template 'analysis-summary-template' to create the summary report.
 
-3. **Evaluation Log** ('evaluation_log.md')
+4. **Evaluation Log** ('evaluation-log.md')
    - **Iteration tracking**: Document each analysis iteration (1-3 max)
    - **Detailed scoring**: All 6 metric scores for each iteration
    - **Improvement tracking**: Score changes between iterations
@@ -107,16 +114,17 @@ const REQUIRED_ARTIFACTS_FRAMEWORK = `
    - **Decision rationale**: Why iterations were needed and what was improved
    - use the template 'evaluation-log-template' to create the evaluation log.
 
-4. **Template Mapping** ('template-mapping-template.md')
+5. **Template Mapping** ('template-mapping.md')
    - **Template Structure**: Document the template structure and component relationships.
-   - use the template 'template-mapping-template.md' to create the template mapping.
+   - use the template 'template-mapping-template' to create the template mapping.
 
 ### Artifact Dependencies
 - Site-urls artifact feeds into Initial Analysis
-- CSV file feeds into Summary report
-- Evaluation log tracks quality of both CSV and Summary
+- EDS blocks analysis CSV file feeds into Summary report
+- Evaluation log tracks quality of both EDS blocks analysis CSV and Summary
 - Summary report feeds into template mapping
-- All four artifacts must be consistent and cross-referenced
+- EDS blocks analysis CSV feeds into Eds blocks consolidated CSV
+- All five artifacts must be consistent and cross-referenced
 `;
 
 // Security Guardrails Framework as a separate resource
@@ -143,10 +151,11 @@ const SECURITY_GUARDRAILS_FRAMEWORK = `
 
 // Template name to file path mapping
 const TEMPLATE_MAPPING = [
-  { name: 'ui-blocks-analysis-template', file: 'ui-blocks-analysis-template.csv' },
+  { name: 'eds-blocks-analysis-template', file: 'eds-blocks-analysis-template.csv' },
   { name: 'analysis-summary-template', file: 'analysis-summary-template.md' },
   { name: 'evaluation-log-template', file: 'evaluation-log-template.md' },
-  { name: 'template-mapping-template', file: 'template-mapping-template.md' }
+  { name: 'template-mapping-template', file: 'template-mapping-template.md' },
+  { name: 'eds-blocks-consolidated-template', file: 'eds-blocks-consolidated-template.csv' }
 ];
 
 // Generic function to get template by name
@@ -191,11 +200,11 @@ const EDS_BLOCK_ANALYSER_PROMPT = `
 - [ ] Use **error_handling_framework** for analysis failures, invalid inputs, and escalation triggers
 
 ### Phase 3: Documentation
-- [ ] Use **required_artifacts_framework** to create all four required artifacts
+- [ ] Use **required_artifacts_framework** to create all five required artifacts
 
 ### Phase 4: Verification
 - [ ] Use **self_evaluation_framework** to run quality assessment and ensure ≥95/100 score
-- [ ] Use **required_artifacts_framework** to verify all four artifacts are generated and consistent
+- [ ] Use **required_artifacts_framework** to verify all five artifacts are generated and consistent
  
 ---
 `;
@@ -259,7 +268,7 @@ server.registerTool("security_guardrails_framework",
 server.registerTool("get_template",
   {
     title: "Get Template",
-    description: "Access any template by name. Available templates: ui-blocks-analysis-template, analysis-summary-template, evaluation-log-template, template-mapping-template",
+    description: "Access any template by name. Available templates: eds-blocks-analysis-template, analysis-summary-template, evaluation-log-template, template-mapping-template",
   },
   async (args) => {
     const templateName = args.templateName;
@@ -275,13 +284,13 @@ server.registerTool("get_template",
 );
 
 // Add individual tools for each artifact template
-server.registerTool("ui-blocks-analysis-template",
+server.registerTool("eds-blocks-analysis-template",
   {
     title: "UI Blocks Analysis Template",
     description: "Access the CSV template for UI blocks analysis",
   },
   async () => ({
-    content: [{ type: "text", text: getTemplate('ui-blocks-analysis-template') }]
+    content: [{ type: "text", text: getTemplate('eds-blocks-analysis-template') }]
   })
 );
 
