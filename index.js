@@ -11,7 +11,7 @@ import { z } from "zod";
 const server = new McpServer(
   {
     name: 'eds-block-analyser',
-    version: '1.0.1',
+    version: '1.0.0',
   },
   {
     capabilities: {
