@@ -16,13 +16,14 @@ const server = new McpServer(
   {
     capabilities: {
       tools: {},
+      resources: {},
     },
   }
 );
 
 const role = `
 ## Role Definition
-You are a UI Architect responsible for analysing the website and estimating the effort to implement the EDS blocks.
+You are a EDS Architect responsible for analysing the website and estimating the effort to implement the EDS blocks.
 `;
 
 // Self-Evaluation Framework as a separate resource
@@ -78,18 +79,17 @@ const ERROR_HANDLING_FRAMEWORK = `
 const REQUIRED_ARTIFACTS_FRAMEWORK = `
 ## Required Artifacts Output
 
-### Critical: Five Artifacts Must Be Created
+### Critical: All Artifacts Must Be Created
 
 1. **EDS Block Analysis CSV** ('eds-blocks-analysis.csv')
    - Contains the complete component breakdown
-   - Use the template 'eds-blocks-analysis-template' to create the csv file. 
+   - Use the template 'eds-blocks-analysis-template' to create the csv file
 
 2. **EDS Blocks Consolidated CSV** ('eds-blocks-consolidated.csv')
-   - Contains the consolidated EDS blocks from eds-blocks-analysis.csv.
-   - Use the template 'eds-blocks-consolidated-template.csv' to create the csv file.
-   - Group by [UI Component Name] from eds-blocks-analysis.csv and also use the [Source block name] from eds-blocks-analysis.csv
-   - Count of the UI components in the group from eds-blocks-analysis.csv
-   - Use 'eds-blocks-consolidated-template' to create the csv file.
+   - Contains the consolidated EDS blocks from eds-blocks-analysis
+   - Group by [UI Component Name] from eds-blocks-analysis.csv and also use the [Source block name] from eds-blocks-analysis
+   - Count of the UI components in the group from eds-blocks-analysis
+   - Use the template 'eds-blocks-consolidated-template' to create the csv file
 
 3. **Summary Report** ('analysis-summary.md')
    - Executive summary of findings
@@ -125,7 +125,7 @@ const REQUIRED_ARTIFACTS_FRAMEWORK = `
 - Evaluation log tracks quality of both EDS blocks analysis CSV and Summary
 - Summary report feeds into template mapping
 - EDS blocks analysis CSV feeds into Eds blocks consolidated CSV
-- All five artifacts must be consistent and cross-referenced
+- All artifacts must be consistent and cross-referenced
 `;
 
 // Security Guardrails Framework as a separate resource
@@ -186,10 +186,9 @@ const EDS_BLOCK_ANALYSER_PROMPT = `
 ### Phase 1: Discovery
 - [ ] Use **security_guardrails_framework** for secure analysis and input validation
 - [ ] Use WebResearch tools (search_google, visit_page, take_screenshot) to scrape URLs, discover sub-pages, create site-urls artifact
-- [ ] Extract components and design patterns from each URL
+- [ ] Refer **required_artifacts_framework** to create all required artifacts
 
 ### Phase 2: Component Analysis  
-- [ ] Use EDS Block Collection tool (list_blocks) to map components to Adobe EDS block collection patterns
 - [ ] Identify and categorize components as Simple/Medium/Complex
   - Simple (1-2 days): Static components (buttons, labels, basic text)
   - Medium (3-5 days): Interactive components with basic state (forms, modals, navigation)
@@ -198,15 +197,21 @@ const EDS_BLOCK_ANALYSER_PROMPT = `
   - Examples: Dashboards → Chart components (Simple) + data widgets (Medium) + interactive controls (Complex)
   - Guidelines: Each sub-component must be independently implementable, clear interfaces, sum individual efforts
 - [ ] Identify component dependencies and integration requirements
+- [ ] Use EDS Block Collection tool (list_blocks) to map components to Adobe EDS block collection patterns and use to map source block name in eds-blocks-analysis artifact 
+- [ ] Extract components add to eds-blocks-analysis artifact and consolidate the artifacts into eds-blocks-consolidated artifact
 - [ ] Use **error_handling_framework** for analysis failures, invalid inputs, and escalation triggers
 
-### Phase 3: Documentation
-- [ ] Use **required_artifacts_framework** to create all five required artifacts
-
-### Phase 4: Verification
+### Phase 3: Evaluation
 - [ ] Use **self_evaluation_framework** to run quality assessment and ensure ≥95/100 score
-- [ ] Use **required_artifacts_framework** to verify all five artifacts are generated and consistent
- 
+
+### Phase 4: Documentation
+- [ ] Create evaluation-log artifact
+- [ ] Create analysis-summary artifact
+- [ ] Create template-mapping artifact
+
+## Phase 5: Verification
+- [ ] Ensure **required_artifacts_framework** to verify all artifacts are generated and consistent
+
 ---
 `;
 
@@ -284,54 +289,84 @@ server.registerTool("get_template",
   }
 );
 
-// Add individual tools for each artifact template
-server.registerTool("eds-blocks-analysis-template",
+// Add individual resources for each artifact template
+server.registerResource(
+  "eds-blocks-analysis-template",
+  "template://eds-blocks-analysis-template",
   {
     title: "EDS Blocks Analysis Template",
-    description: "Access the CSV template for EDS blocks analysis",
+    description: "CSV template for EDS blocks analysis",
+    mimeType: "text/csv"
   },
-  async () => ({
-    content: [{ type: "text", text: getTemplate('eds-blocks-analysis-template') }]
+  async (uri) => ({
+    contents: [{
+      uri: uri.href,
+      text: getTemplate('eds-blocks-analysis-template')
+    }]
   })
 );
 
-server.registerTool("eds-blocks-consolidated-template",
+server.registerResource(
+  "eds-blocks-consolidated-template",
+  "template://eds-blocks-consolidated-template",
   {
     title: "EDS Blocks Consolidated Template",
-    description: "Access the consolidated CSV template for EDS blocks analysis",
+    description: "Consolidated CSV template for EDS blocks analysis",
+    mimeType: "text/csv"
   },
-  async () => ({
-    content: [{ type: "text", text: getTemplate('eds-blocks-consolidated-template') }]
+  async (uri) => ({
+    contents: [{
+      uri: uri.href,
+      text: getTemplate('eds-blocks-consolidated-template')
+    }]
   })
 );
 
-server.registerTool("analysis-summary-template",
+server.registerResource(
+  "analysis-summary-template",
+  "template://analysis-summary-template",
   {
     title: "Analysis Summary Template",
-    description: "Access the markdown template for analysis summary report",
+    description: "Markdown template for analysis summary report",
+    mimeType: "text/markdown"
   },
-  async () => ({
-    content: [{ type: "text", text: getTemplate('analysis-summary-template') }]
+  async (uri) => ({
+    contents: [{
+      uri: uri.href,
+      text: getTemplate('analysis-summary-template')
+    }]
   })
 );
 
-server.registerTool("evaluation-log-template",
+server.registerResource(
+  "evaluation-log-template",
+  "template://evaluation-log-template",
   {
     title: "Evaluation Log Template",
-    description: "Access the markdown template for evaluation log",
+    description: "Markdown template for evaluation log",
+    mimeType: "text/markdown"
   },
-  async () => ({
-    content: [{ type: "text", text: getTemplate('evaluation-log-template') }]
+  async (uri) => ({
+    contents: [{
+      uri: uri.href,
+      text: getTemplate('evaluation-log-template')
+    }]
   })
 );
 
-server.registerTool("template-mapping-template",
+server.registerResource(
+  "template-mapping-template",
+  "template://template-mapping-template",
   {
     title: "Template Mapping Diagram",
-    description: "Access the generic template mapping diagram for website template analysis and documentation",
+    description: "Template mapping diagram for website template analysis and documentation",
+    mimeType: "text/markdown"
   },
-  async () => ({
-    content: [{ type: "text", text: getTemplate('template-mapping-template') }]
+  async (uri) => ({
+    contents: [{
+      uri: uri.href,
+      text: getTemplate('template-mapping-template')
+    }]
   })
 );
 
