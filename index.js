@@ -186,9 +186,9 @@ const EDS_BLOCK_ANALYSER_PROMPT = `
 
 ### Phase 3: Evaluation
 - [ ] Use **self_evaluation_framework** to run quality assessment (target ≥95/100 score)
+- [ ] **Create evaluation-log.md**: Download template → Replace placeholders with real evaluation data
 
 ### Phase 4: Documentation
-- [ ] **Create evaluation-log.md**: Download template → Replace placeholders with real evaluation data
 - [ ] **Create analysis-summary.md**: Download template → Replace placeholders with real analysis findings
 - [ ] **Create template-mapping.md**: Download template → Replace placeholders with real mapping data
 
