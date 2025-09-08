@@ -179,7 +179,7 @@ const EDS_BLOCK_ANALYSER_PROMPT = `
 - [ ] **Analyze each URL** and extract UI components systematically
 - [ ] **Categorize components** as Simple (1-2 days), Medium (3-5 days), Complex (1-2 weeks)
 - [ ] **Break large components** (2-4 weeks, 1+ months) into manageable sub-components
-- [ ] **Use EDS Block Collection tool (list_blocks)** to map components to Adobe EDS patterns
+- [ ] **Use EDS Block Collection MCP tool -> 'list_blocks' ** to map components to EDS patterns
 - [ ] **Create eds-blocks-analysis.csv**: Download template → Replace ALL placeholders with real data
 - [ ] **Create eds-blocks-consolidated.csv**: Download template → Group components → Replace placeholders
 - [ ] Use **error_handling_framework** for analysis failures and escalation triggers
