@@ -79,64 +79,39 @@ const ERROR_HANDLING_FRAMEWORK = `
 const REQUIRED_ARTIFACTS_FRAMEWORK = `
 ## Required Artifacts Output
 
-### CRITICAL: Template Processing Workflow
-1. **Download Template**: Use get_template tool to fetch template content
-2. **Replace Placeholders**: Replace ALL placeholder values with actual analysis data
-3. **Create Final Artifact**: Save the populated content as the final artifact file
-4. **Verify Completeness**: Ensure no placeholder values remain in final artifacts
-
-### Critical: All Artifacts Must Be Created
+### Template Processing: Download → Replace Placeholders → Save Final Artifact
 
 1. **EDS Block Analysis CSV** ('eds-blocks-analysis.csv')
-   - Contains the complete component breakdown with REAL DATA
-   - **Process**: Download 'eds-blocks-analysis-template' → Replace ALL placeholders → Save as final CSV
-   - **Required Data**: Actual page titles, component names, complexity assessments, URLs, EDS block mappings
+   - Complete component breakdown with REAL DATA
+   - Template: 'eds-blocks-analysis-template'
+   - Required: Actual page titles, component names, complexity assessments, URLs, EDS block mappings
 
 2. **EDS Blocks Consolidated CSV** ('eds-blocks-consolidated.csv')
-   - Contains consolidated EDS blocks with REAL DATA from eds-blocks-analysis
-   - **Process**: Download 'eds-blocks-consolidated-template' → Group components → Replace placeholders → Save as final CSV
-   - **Required Data**: Actual component groupings, occurrence counts, complexity summaries
+   - Consolidated EDS blocks with REAL DATA from eds-blocks-analysis
+   - Template: 'eds-blocks-consolidated-template'
+   - Required: Actual component groupings, occurrence counts, complexity summaries
 
 3. **Summary Report** ('analysis-summary.md')
    - Executive summary with REAL ANALYSIS FINDINGS
-   - **Process**: Download 'analysis-summary-template' → Replace ALL placeholders → Save as final MD
-   - **Required Data**: Actual project scope, component counts, effort estimates, technical notes, risks
-   - **URL Analysis Section**: Complete list of all URLs analyzed with individual statistics
-     - URL count and breakdown by page type/template
-     - **Coverage Analysis**: Percentage of pages analyzed against total discovered pages
-     - Component count per URL
-     - Complexity distribution per URL
-     - Unique components discovered per URL
-     - URL processing status (success/failed/partial)
-   - Block statistics (total blocks, pages, URLs)
-   - Reusability recommendations
-   - Technical implementation notes
-   - Risk assessment and mitigation strategies
+   - Template: 'analysis-summary-template'
+   - Required: Actual project scope, component counts, effort estimates, technical notes, risks
+   - Include: URL analysis section with complete statistics, coverage analysis, block statistics
 
 4. **Evaluation Log** ('evaluation-log.md')
    - Quality assessment with REAL EVALUATION DATA
-   - **Process**: Download 'evaluation-log-template' → Replace ALL placeholders → Save as final MD
-   - **Required Data**: Actual timestamps, quality scores, iteration history, decision rationale
-   - **Iteration tracking**: Document each analysis iteration (1-3 max)
-   - **Detailed scoring**: All 6 metric scores for each iteration
-   - **Improvement tracking**: Score changes between iterations
-   - **Final evaluation**: Overall quality score and pass/fail status
-   - **Time stamps**: When each iteration was completed
-   - **Decision rationale**: Why iterations were needed and what was improved
+   - Template: 'evaluation-log-template'
+   - Required: Actual timestamps, quality scores, iteration history, decision rationale
+   - Include: Iteration tracking (1-3 max), detailed scoring, improvement tracking
 
 5. **Template Mapping** ('template-mapping.md')
    - Template structure documentation with REAL MAPPING DATA
-   - **Process**: Download 'template-mapping-template' → Replace ALL placeholders → Save as final MD
-   - **Required Data**: Actual template structure, component relationships, page hierarchy
-   - **Template Structure**: Document the template structure and component relationships
+   - Template: 'template-mapping-template'
+   - Required: Actual template structure, component relationships, page hierarchy
 
 ### Artifact Dependencies
-- Site-urls artifact feeds into Initial Analysis
-- EDS blocks analysis CSV file feeds into Summary report
-- Evaluation log tracks quality of both EDS blocks analysis CSV and Summary
-- Summary report feeds into template mapping
-- EDS blocks analysis CSV feeds into Eds blocks consolidated CSV
 - All artifacts must be consistent and cross-referenced
+- EDS blocks analysis CSV feeds into consolidated CSV and summary report
+- Evaluation log tracks quality of all artifacts
 `;
 
 // Security Guardrails Framework as a separate resource
@@ -192,84 +167,34 @@ function getTemplate(templateName) {
 
 // Define the EDS Block Analyser prompt
 const EDS_BLOCK_ANALYSER_PROMPT = `
-## CRITICAL INSTRUCTION: Templates vs Artifacts
-**TEMPLATES ARE NOT FINAL ARTIFACTS!** 
-- Templates contain placeholder values like [Page Title], [Component Name], etc.
-- You MUST download templates AND replace ALL placeholder values with actual analysis data
-- Final artifacts must contain real data, not placeholder text
-- Each artifact must be a complete, populated file ready for use
-
-## Analysis Todo List
+## CRITICAL: Templates → Populated Artifacts
+**Templates contain placeholders like [Page Title], [Component Name]. You MUST replace ALL placeholders with actual analysis data to create final artifacts.**
 
 ### Phase 1: Discovery
 - [ ] Use **security_guardrails_framework** for secure analysis and input validation
-- [ ] Use WebResearch tools (search_google, visit_page, take_screenshot) to scrape URLs, discover sub-pages, create site-urls artifact
-- [ ] Refer **required_artifacts_framework** to create all required artifacts
+- [ ] Use WebResearch tools (search_google, visit_page, take_screenshot) to scrape URLs and discover sub-pages
+- [ ] Refer **required_artifacts_framework** for artifact specifications
 
 ### Phase 2: Component Analysis  
-- [ ] **Analyze each discovered URL** and extract all UI components systematically
-- [ ] **Identify and categorize components** as Simple/Medium/Complex
-  - Simple (1-2 days): Static components (buttons, labels, basic text)
-  - Medium (3-5 days): Interactive components with basic state (forms, modals, navigation)
-  - Complex (1-2 weeks): Complex components with multiple states (carousels, data tables, multi-step forms)
+- [ ] **Analyze each URL** and extract UI components systematically
+- [ ] **Categorize components** as Simple (1-2 days), Medium (3-5 days), Complex (1-2 weeks)
 - [ ] **Break large components** (2-4 weeks, 1+ months) into manageable sub-components
-  - Examples: Dashboards → Chart components (Simple) + data widgets (Medium) + interactive controls (Complex)
-  - Guidelines: Each sub-component must be independently implementable, clear interfaces, sum individual efforts
-- [ ] **Use EDS Block Collection tool (list_blocks)** to map each component to Adobe EDS block collection patterns
-- [ ] **Create populated eds-blocks-analysis.csv** by:
-  - Downloading the 'eds-blocks-analysis-template' template
-  - **Replacing ALL placeholder values** with actual analysis data:
-    - [Page Title] → Actual page titles from URLs
-    - [Component Name] → Actual component names found
-    - [Brief description of component function] → Real component descriptions
-    - [S/M/C] → Actual complexity assessments
-    - [Count] → Real occurrence counts
-    - [Justification for sizing] → Actual complexity justifications
-    - [Page URL] → Real URLs analyzed
-    - [Original block name] → Mapped EDS block names from list_blocks
-    - [Variation classification] → Actual variation types
-    - [Additional notes] → Real implementation notes
-- [ ] **Create populated eds-blocks-consolidated.csv** by:
-  - Downloading the 'eds-blocks-consolidated-template' template
-  - **Grouping components** from eds-blocks-analysis.csv by [UI Component Name]
-  - **Replacing placeholder values** with actual consolidated data
-- [ ] Use **error_handling_framework** for analysis failures, invalid inputs, and escalation triggers
+- [ ] **Use EDS Block Collection tool (list_blocks)** to map components to Adobe EDS patterns
+- [ ] **Create eds-blocks-analysis.csv**: Download template → Replace ALL placeholders with real data
+- [ ] **Create eds-blocks-consolidated.csv**: Download template → Group components → Replace placeholders
+- [ ] Use **error_handling_framework** for analysis failures and escalation triggers
 
 ### Phase 3: Evaluation
-- [ ] Use **self_evaluation_framework** to run quality assessment and ensure ≥95/100 score
+- [ ] Use **self_evaluation_framework** to run quality assessment (target ≥95/100 score)
 
 ### Phase 4: Documentation
-- [ ] **Create populated evaluation-log.md** by:
-  - Downloading the 'evaluation-log-template' template
-  - **Replacing ALL placeholder values** with actual evaluation data:
-    - [Timestamp] → Real timestamps of analysis phases
-    - [Quality Score] → Actual quality scores from self_evaluation_framework
-    - [Iteration Details] → Real iteration history and improvements
-    - [Decision Rationale] → Actual reasons for iterations and improvements
-- [ ] **Create populated analysis-summary.md** by:
-  - Downloading the 'analysis-summary-template' template
-  - **Replacing ALL placeholder values** with actual analysis data:
-    - [Project Overview] → Real project details and scope
-    - [Component Summary] → Actual component counts and complexity breakdown
-    - [Effort Estimation] → Real effort estimates and timelines
-    - [Technical Notes] → Actual implementation considerations
-    - [Risk Assessment] → Real risks and mitigation strategies
-- [ ] **Create populated template-mapping.md** by:
-  - Downloading the 'template-mapping-template' template
-  - **Replacing ALL placeholder values** with actual mapping data:
-    - [Template Structure] → Real website template structure analysis
-    - [Component Relationships] → Actual component dependency mapping
-    - [Page Hierarchy] → Real page structure and navigation flow
+- [ ] **Create evaluation-log.md**: Download template → Replace placeholders with real evaluation data
+- [ ] **Create analysis-summary.md**: Download template → Replace placeholders with real analysis findings
+- [ ] **Create template-mapping.md**: Download template → Replace placeholders with real mapping data
 
-## Phase 5: Verification
+### Phase 5: Verification
 - [ ] **Verify NO placeholder values remain** in any final artifact files
-- [ ] **Confirm all artifacts contain REAL DATA**:
-  - eds-blocks-analysis.csv: Real component data, not [Component Name] placeholders
-  - eds-blocks-consolidated.csv: Real consolidated data, not [Count] placeholders  
-  - analysis-summary.md: Real analysis findings, not [Project Overview] placeholders
-  - evaluation-log.md: Real evaluation data, not [Timestamp] placeholders
-  - template-mapping.md: Real mapping data, not [Template Structure] placeholders
-- [ ] Ensure **required_artifacts_framework** compliance for all artifacts
+- [ ] **Confirm all artifacts contain REAL DATA** (not [placeholder] text)
 - [ ] Cross-reference artifacts for consistency and completeness
 
 ---
