@@ -214,7 +214,7 @@ server.registerTool("eds_block_analyser",
           properties: {
               analysisScope: {
                   type: 'string',
-                  title: 'Check alternative dates',
+                  title: 'Analysis Scope',
                   description: 'Would you like analyse the entire website or only specific URLs?',
                   enum: ['all', 'specific'],
                   enumNames: ['All', 'Specific']
