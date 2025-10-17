@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { z } from "zod";
 
-
 // Create the server
 const server = new McpServer(
   {
@@ -206,9 +205,54 @@ server.registerTool("eds_block_analyser",
     title: "EDS block analyser",
     description: "Analyse the site and estimate the effort to implement the eds blocks",
   },
-  async () => ({
-    content: [{ type: "text", text: `Role: ${role}\nContent: ${EDS_BLOCK_ANALYSER_PROMPT}` }]
-  })
+  async ({ }) => {
+
+    const result = await server.server.elicitInput({
+      message: `Choose 'all' to analyze the entire website by crawling all pages, or 'specific' to analyze only provided URLs`,
+      requestedSchema: {
+          type: 'object',
+          properties: {
+              analysisScope: {
+                  type: 'string',
+                  title: 'Check alternative dates',
+                  description: 'Would you like analyse the entire website or only specific URLs?',
+                  enum: ['all', 'specific'],
+                  enumNames: ['All', 'Specific']
+              }
+          },
+          required: ['analysisScope']
+        }
+      });
+
+      if (result.action === 'accept' ) {
+        if (result.content?.analysisScope === 'specific') {
+        const specificAnalysisScopeInstruction = `
+### Analysis Scope
+**Mode**: SPECIFIC URL ANALYSIS
+- Analyze ONLY the provided URLs
+- Do NOT crawl or discover additional pages
+- Focus exclusively on the components found in these specific pages
+`;
+        const customizedPrompt = `${specificAnalysisScopeInstruction}\n${EDS_BLOCK_ANALYSER_PROMPT}`;
+        return {
+          content: [{ type: "text", text: `Role: ${role}\nContent: ${customizedPrompt}` }]
+        };
+      } else {
+        const entireAnalysisScopeInstruction = `
+### Analysis Scope
+**Mode**: ENTIRE SITE ANALYSIS
+- Discover and analyze ALL pages on the website
+- Start from the provided base URL and crawl all linked pages
+- Include all sub-pages, navigation links, and internal pages
+- Ensure comprehensive coverage of the entire website
+`;
+        const customizedPrompt = `${entireAnalysisScopeInstruction}\n${EDS_BLOCK_ANALYSER_PROMPT}`;
+        return {
+          content: [{ type: "text", text: `Role: ${role}\nContent: ${customizedPrompt}` }]
+        };
+      }
+    }
+  }
 );
 
 // Add a separate tool for accessing the self-evaluation framework
@@ -253,6 +297,101 @@ server.registerTool("security_guardrails_framework",
   async () => ({
     content: [{ type: "text", text: SECURITY_GUARDRAILS_FRAMEWORK }]
   })
+);
+
+// Server-side: Restaurant booking tool that asks for alternatives
+server.registerTool(
+  'book-restaurant',
+  {
+      title: 'Book Restaurant',
+      description: 'Book a table at a restaurant',
+      inputSchema: {
+          restaurant: z.string(),
+          date: z.string(),
+          partySize: z.number()
+      },
+      outputSchema: {
+          success: z.boolean(),
+          booking: z
+              .object({
+                  restaurant: z.string(),
+                  date: z.string(),
+                  partySize: z.number()
+              })
+              .optional(),
+          alternatives: z.array(z.string()).optional()
+      }
+  },
+  async ({ restaurant, date, partySize }) => {
+      // Check availability
+      const available = false; //await checkAvailability(restaurant, date, partySize);
+
+      if (!available) {
+          // Ask user if they want to try alternative dates
+          const result = await server.server.elicitInput({
+              message: `No tables available at ${restaurant} on ${date}. Would you like to check alternative dates?`,
+              requestedSchema: {
+                  type: 'object',
+                  properties: {
+                      checkAlternatives: {
+                          type: 'boolean',
+                          title: 'Check alternative dates',
+                          description: 'Would you like me to check other dates?'
+                      },
+                      flexibleDates: {
+                          type: 'string',
+                          title: 'Date flexibility',
+                          description: 'How flexible are your dates?',
+                          enum: ['next_day', 'same_week', 'next_week'],
+                          enumNames: ['Next day', 'Same week', 'Next week']
+                      }
+                  },
+                  required: ['checkAlternatives']
+              }
+          });
+
+          if (result.action === 'accept' && result.content?.checkAlternatives) {
+              // const alternatives = await findAlternatives(restaurant, date, partySize, result.content.flexibleDates as string);
+              const output = { success: false, alternatives: [] };
+              return {
+                  content: [
+                      {
+                          type: 'text',
+                          text: JSON.stringify(output)
+                      }
+                  ],
+                  structuredContent: output
+              };
+          }
+
+          const output = { success: false };
+          return {
+              content: [
+                  {
+                      type: 'text',
+                      text: JSON.stringify(output)
+                  }
+              ],
+              structuredContent: output
+          };
+      }
+
+      // Book the table
+      //  await makeBooking(restaurant, date, partySize);
+      const output = {
+          success: true,
+          booking: { restaurant, date, partySize }
+      };
+      return {
+          content: [
+              {
+                  type: 'text',
+                  text: JSON.stringify(output)
+              }
+          ],
+          structuredContent: output
+      };
+  }
 );
 
 // Add a generic tool for accessing any template by name
