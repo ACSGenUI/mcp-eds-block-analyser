@@ -1,7 +1,7 @@
 {
-  "name": "eds-block-analyser-mcp-server",
+  "name": "mcp-block-analyser",
   "version": "1.0.9",
-  "description": "MCP server that orchestrates complete website analysis, component extraction, variation grouping, and effort estimation",
+  "description": "MCP server that orchestrates complete website analysis, component extraction, variation grouping, and effort estimation for Adobe AEM Block Collection",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "eds-block-analyser-mcp-server": "index.js"
+    "mcp-block-analyser": "index.js"
   },
   "keywords": [
     "mcp",
@@ -20,18 +20,23 @@
     "figma",
     "web-page",
     "effort-estimation",
-    "prompt"
+    "prompt",
+    "aem",
+    "adobe",
+    "blocks",
+    "metadata"
   ],
-  "author": "ACS UI",
+  "author": "Adobe ACS GENUI",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.2"
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "zod": "^3.22.4"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ACS-UI/eds-block-analyser-mcp-server.git"
+    "url": "https://github.com/ACS-UI/mcp-block-analyser.git"
   }
 }
