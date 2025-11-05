@@ -206,39 +206,7 @@ server.registerTool("eds_block_analyser",
     description: "Analyse the site and estimate the effort to implement the eds blocks",
   },
   async ({ }) => {
-
-    const result = await server.server.elicitInput({
-      message: `Choose 'all' to analyze the entire website by crawling all pages, or 'specific' to analyze only provided URLs`,
-      requestedSchema: {
-          type: 'object',
-          properties: {
-              analysisScope: {
-                  type: 'string',
-                  title: 'Analysis Scope',
-                  description: 'Would you like analyse the entire website or only specific URLs?',
-                  enum: ['all', 'specific'],
-                  enumNames: ['All', 'Specific']
-              }
-          },
-          required: ['analysisScope']
-        }
-      });
-
-      if (result.action === 'accept' ) {
-        if (result.content?.analysisScope === 'specific') {
-        const specificAnalysisScopeInstruction = `
-### Analysis Scope
-**Mode**: SPECIFIC URL ANALYSIS
-- Analyze ONLY the provided URLs
-- Do NOT crawl or discover additional pages
-- Focus exclusively on the components found in these specific pages
-`;
-        const customizedPrompt = `${specificAnalysisScopeInstruction}\n${EDS_BLOCK_ANALYSER_PROMPT}`;
-        return {
-          content: [{ type: "text", text: `Role: ${role}\nContent: ${customizedPrompt}` }]
-        };
-      } else {
-        const entireAnalysisScopeInstruction = `
+    const entireAnalysisScopeInstruction = `
 ### Analysis Scope
 **Mode**: ENTIRE SITE ANALYSIS
 - Discover and analyze ALL pages on the website
@@ -246,12 +214,10 @@ server.registerTool("eds_block_analyser",
 - Include all sub-pages, navigation links, and internal pages
 - Ensure comprehensive coverage of the entire website
 `;
-        const customizedPrompt = `${entireAnalysisScopeInstruction}\n${EDS_BLOCK_ANALYSER_PROMPT}`;
-        return {
-          content: [{ type: "text", text: `Role: ${role}\nContent: ${customizedPrompt}` }]
-        };
-      }
-    }
+    const customizedPrompt = `${entireAnalysisScopeInstruction}\n${EDS_BLOCK_ANALYSER_PROMPT}`;
+    return {
+      content: [{ type: "text", text: `Role: ${role}\nContent: ${customizedPrompt}` }]
+    };
   }
 );
 
