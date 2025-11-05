@@ -206,7 +206,7 @@ server.registerTool("eds_block_analyser",
     description: "Analyse the site and estimate the effort to implement the eds blocks",
   },
   async ({ }) => {
-
+    // Ask the user if they want to analyze the entire website or only specific URLs
     const result = await server.server.elicitInput({
       message: `Choose 'all' to analyze the entire website by crawling all pages, or 'specific' to analyze only provided URLs`,
       requestedSchema: {
