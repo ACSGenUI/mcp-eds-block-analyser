@@ -171,14 +171,14 @@ const EDS_BLOCK_ANALYSER_PROMPT = `
 
 ### Phase 1: Discovery
 - [ ] Use **security_guardrails_framework** for secure analysis and input validation
-- [ ] Use available tools to scrape URLs, discover sub-pages, scrape page content and capture visual representations like take_screenshot
+- Use WebResearch tools (search_google, google_search, visit_page, take_screenshot) to scrape URLs and discover sub-pages
 - [ ] Refer **required_artifacts_framework** for artifact specifications
 
 ### Phase 2: Component Analysis  
 - [ ] **Analyze each URL** and extract UI components systematically
 - [ ] **Categorize components** as Simple (1-2 days), Medium (3-5 days), Complex (1-2 weeks)
 - [ ] **Break large components** (2-4 weeks, 1+ months) into manageable sub-components
-- [ ] **Access available block metadata** to map components to EDS patterns
+- [ ] **Use EDS Block Collection MCP tool -> 'list_blocks' ** to map components to EDS patterns
 - [ ] **Create eds-blocks-analysis.csv**: Download template → Replace ALL placeholders with real data
 - [ ] **Create eds-blocks-consolidated.csv**: Download template → Group components → Replace placeholders
 - [ ] Use **error_handling_framework** for analysis failures and escalation triggers
