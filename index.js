@@ -171,7 +171,7 @@ const EDS_BLOCK_ANALYSER_PROMPT = `
 
 ### Phase 1: Discovery
 - [ ] Use **security_guardrails_framework** for secure analysis and input validation
-- [ ] Use available web research capabilities to scrape URLs, discover sub-pages, and capture visual representations
+- [ ] Use available tools to scrape URLs, discover sub-pages, scrape page content and capture visual representations like take_screenshot
 - [ ] Refer **required_artifacts_framework** for artifact specifications
 
 ### Phase 2: Component Analysis  
